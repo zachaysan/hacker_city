@@ -1,2 +1,4 @@
-hacker_city
+Hacker City
 ===========
+
+Fun for everyone!

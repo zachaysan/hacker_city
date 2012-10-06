@@ -1,0 +1,8 @@
+# Ignore python generated files
+*.pyc
+
+# Ignore editor generated files
+*~
+
+# Ignore helper scripts
+run_current.sh
