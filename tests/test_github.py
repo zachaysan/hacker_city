@@ -7,10 +7,15 @@ from pprint import pprint
 
 class Test_Github(unittest.TestCase):
     def gen_users(self):
+        """ Generate users by crawling from 
+        Zach Aysan, each successive next() call
+        goes further and further out
+        """
+
         g = Github()
         u = (u for u in g.crawl_from_user("zachaysan",
                                           "toronto",
-                                          max_requests=1))
+                                          max_requests=100))
         return u
 
     def setUp(self):
@@ -48,5 +53,14 @@ class Test_Github(unittest.TestCase):
         self.assertEqual(zach.login, "zachaysan")
         self.assertEqual(type(zach.created_at), datetime)
         
-    def test_friend_retrival(self):
-        pass
+    def test_follower_retrival(self):
+        zach = next(self.gen_users())
+        zach = GithubUser(zach)
+        self.assertEqual(len([f for f in zach.followers()]),
+                         zach.count_followers)
+    
+    def test_followings_retrival(self):
+        zach = next(self.gen_users())
+        zach = GithubUser(zach)
+        self.assertEqual(len([f for f in zach.followings()]),
+                         zach.count_followings)

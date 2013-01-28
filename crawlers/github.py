@@ -17,5 +17,4 @@ class Github(object):
                 break
             for user in page:
                 yield user
-
-        
+                

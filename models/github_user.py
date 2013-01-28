@@ -1,16 +1,19 @@
-import riak
 from copy import copy
-
-from models.github_id import GithubId
 from datetime import datetime
 from dateutil import parser
+
+import riak
+import pygithub3
+
+from models.github_id import GithubId
+
+gh = pygithub3.Github()
 
 BUCKET_NAME = 'github_user'
 client = riak.RiakClient()
 bucket = client.bucket(BUCKET_NAME)
 
 class GithubUser(object):
-
     @staticmethod
     def find(id):
         riak_user = bucket.get(str(id))
@@ -108,3 +111,18 @@ class GithubUser(object):
             self.created_at = parser.parse(created_at)
         else:
             self.created_at = created_at
+
+    def followers(self):
+        for page in gh.users.followers.list(self.login):
+            for user in page:
+                yield user
+
+    def followings(self):
+        """ It doesn't look like this call is built into
+        this github library. I may have to just use the
+        requests package and do it live myself.
+        """
+
+        for page in gh.users.followings.list(self.login):
+            for user in page:
+                yield user
